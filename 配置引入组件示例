@@ -1,0 +1,22 @@
+Spring配置：
+    <bean id="dynamicStatementTemplate"
+          class="com.jd.vf.hibernate.dystatement.template.impl.DynamicStatementTemplate"
+          init-method="init">
+        <property name="MapperScanDirectory">
+            <list>
+                <value>classpath:/com/jd/vf/hibernate/demo/mapper</value>
+            </list>
+        </property>
+        <property name="ClassScanDirectory">
+            <list>
+                <value>org.digdata.swustoj.entity</value>
+            </list>
+        </property>
+    </bean>
+================================================================
+Maven依赖：
+    <dependency>
+        <groupId>com.jd</groupId>
+        <artifactId>vf.hibernate.dystatement.client</artifactId>
+        <version>1.0.0</version>
+    </dependency>

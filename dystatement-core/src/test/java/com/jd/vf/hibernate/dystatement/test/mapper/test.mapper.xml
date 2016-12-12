@@ -1,0 +1,49 @@
+<mapper namespace="test.namespace">
+
+    <select id="test_method" return="com.jd.vf.hibernate.dystatement.test.entity.Student"
+            type="sql">
+        <![CDATA[
+            select * from student
+            where 1=1
+            <#if name??>
+                and name = ${name}
+            </#if>
+            <#if age??>
+                and age = ${age}
+            </#if>
+            <#if start?? && offset??>
+                limit ${start},${offset}
+            </#if>
+        ]]>
+    </select>
+
+    <insert id="test_method1" type="sql">
+        <![CDATA[
+            insert into student(name,age) value
+            <#assign isFirst = true>
+            <#list list as item>
+                <#if isFirst == false>,</#if>
+                (${item.name},${item.age})
+                <#assign isFirst = false>
+            </#list>
+        ]]>
+    </insert>
+
+    <select id="test_method2" return="com.jd.vf.hibernate.dystatement.test.entity.Student"
+            type="hql">
+        <![CDATA[
+            select count(*) from student stu
+            where 1=1
+            <#if name??>
+                and stu.name = ${name}
+            </#if>
+            <#if age??>
+                and stu.age = ${age + 1}
+            </#if>
+            <#if start?? && offset??>
+                limit ${start},${offset}
+            </#if>
+        ]]>
+    </select>
+
+</mapper>

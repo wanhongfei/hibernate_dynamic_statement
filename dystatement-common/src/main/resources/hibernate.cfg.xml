@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <session-factory>
+        <property name="connection.url">jdbc:mysql://yqhui.com:3306/oj3</property>
+        <property name="connection.driver_class">com.mysql.jdbc.Driver</property>
+        <property name="connection.username">loco</property>
+        <property name="connection.password">loco.cs.swust</property>
+
+        <!--hibernate 方言-->
+        <property name="dialect">org.hibernate.dialect.MySQL5Dialect</property>
+
+        <!--执行语句时打印sql-->
+        <property name="show_sql">true</property>
+
+        <!--sql格式化-->
+        <property name="format_sql">true</property>
+
+        <!--自动生成数据表-->
+        <property name="hbm2ddl.auto">update</property>
+
+        <!--delete时将主键置为null-->
+        <property name="use_identifier_rollback">true</property>
+
+        <!--开启缓存-->
+        <!--<property name="hibernate.cache.use_query_cache">true</property>-->
+
+    </session-factory>
+</hibernate-configuration>
