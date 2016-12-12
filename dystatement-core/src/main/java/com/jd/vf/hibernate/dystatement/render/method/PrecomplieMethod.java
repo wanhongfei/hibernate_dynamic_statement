@@ -1,11 +1,7 @@
 package com.jd.vf.hibernate.dystatement.render.method;
 
 import com.jd.vf.hibernate.dystatement.model.Pair;
-import freemarker.template.SimpleDate;
-import freemarker.template.SimpleNumber;
-import freemarker.template.SimpleScalar;
-import freemarker.template.TemplateMethodModelEx;
-import freemarker.template.TemplateModelException;
+import freemarker.template.*;
 
 import java.util.ArrayList;
 import java.util.List;

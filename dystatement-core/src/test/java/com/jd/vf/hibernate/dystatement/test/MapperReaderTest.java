@@ -15,21 +15,21 @@ import java.util.List;
  */
 public class MapperReaderTest {
 
-    private MapperReader reader = null;
+	private MapperReader reader = null;
 
-    @Before
-    public void before() throws DocumentException, IOException, ClassNotFoundException {
-        List<String> paths = new ArrayList<>();
-        paths.add("C:\\workspace\\hibernate_dynamic_statement\\dystatement\\dystatement-client\\src\\test\\java\\com\\jd\\vf\\hibernate\\dystatement\\test\\mapper");
-        reader = new MapperReader(paths);
-    }
+	@Before
+	public void before() throws DocumentException, IOException, ClassNotFoundException {
+		List<String> paths = new ArrayList<>();
+		paths.add("C:\\workspace\\dystatement\\dystatement-client\\src\\test\\java\\com\\jd\\vf\\hibernate\\dystatement\\test\\mapper");
+		reader = new MapperReader(paths);
+	}
 
-    @After
-    public void after() {
-    }
+	@After
+	public void after() {
+	}
 
-    @Test
-    public void test() {
-        System.out.println(reader.getMapper("test.namespace"));
-    }
+	@Test
+	public void test() {
+		System.out.println(reader.getMapper("test.namespace"));
+	}
 }

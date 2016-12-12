@@ -21,7 +21,7 @@ public class TemplateTest {
 		template = new DynamicStatementTemplate();
 
 		List<String> paths = new ArrayList<>();
-		paths.add("C:\\workspace\\hibernate_dynamic_statement\\dystatement\\dystatement-client\\src\\test\\java\\com\\jd\\vf\\hibernate\\dystatement\\test\\mapper");
+		paths.add("C:\\workspace\\dystatement\\dystatement-client\\src\\test\\java\\com\\jd\\vf\\hibernate\\dystatement\\test\\mapper");
 		template.setMapperScanDirectory(paths);
 
 		List<String> packages = new ArrayList<>();

@@ -13,21 +13,21 @@ import java.util.List;
  */
 public class ClassScannerTest {
 
-    private ClassesScanner scanner = null;
+	private ClassesScanner scanner = null;
 
-    @Before
-    public void before() {
-        List<String> paths = new ArrayList<>();
-        paths.add("com.jd.vf.hibernate.dystatement.test.entity");
-        scanner = new ClassesScanner(paths);
-    }
+	@Before
+	public void before() {
+		List<String> paths = new ArrayList<>();
+		paths.add("com.jd.vf.hibernate.dystatement.test.entity");
+		scanner = new ClassesScanner(paths);
+	}
 
-    @After
-    public void after() {
-    }
+	@After
+	public void after() {
+	}
 
-    @Test
-    public void test() {
-        System.out.println(scanner.getClassPropertiesMapper());
-    }
+	@Test
+	public void test() {
+		System.out.println(scanner.getClassPropertiesMapper());
+	}
 }
