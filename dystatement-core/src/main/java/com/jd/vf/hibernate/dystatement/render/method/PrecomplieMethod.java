@@ -1,21 +1,57 @@
 package com.jd.vf.hibernate.dystatement.render.method;
 
 import com.jd.vf.hibernate.dystatement.model.Pair;
-import freemarker.template.*;
+import freemarker.template.SimpleDate;
+import freemarker.template.SimpleNumber;
+import freemarker.template.SimpleScalar;
+import freemarker.template.TemplateMethodModelEx;
+import freemarker.template.TemplateModelException;
+import lombok.SneakyThrows;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by hongfei.whf on 2016/12/11.
+ * 针对sql
  */
-public class PrecomplieMethod implements TemplateMethodModelEx {
+public class PreComplieMethod implements TemplateMethodModelEx {
 
-	private static final ThreadLocal<List<Pair<Class, Object>>> threadLocal = new ThreadLocal<>();
+	/**
+	 * 绑定执行剥离的参数
+	 */
+	protected static final ThreadLocal<List<Pair<Class, Object>>> threadLocal = new ThreadLocal<>();
 
+	/**
+	 * 方法执行
+	 *
+	 * @param args
+	 * @return
+	 * @throws TemplateModelException
+	 */
 	@Override
-	public Object exec(List list) throws TemplateModelException {
-		if (list == null || list.size() != 1) {
+	public Object exec(List args) throws TemplateModelException {
+		handleParameters(args);
+		return getPlaceholder();
+	}
+
+	/**
+	 * 获取占位符
+	 *
+	 * @return
+	 */
+	protected String getPlaceholder() {
+		return "?";
+	}
+
+	/**
+	 * 剥离参数
+	 *
+	 * @param args
+	 */
+	@SneakyThrows
+	protected void handleParameters(List args) {
+		if (args == null || args.size() != 1) {
 			throw new TemplateModelException("parameter is null");
 		}
 		// 获取和线程绑定的参数列表
@@ -25,7 +61,7 @@ public class PrecomplieMethod implements TemplateMethodModelEx {
 			threadLocal.set(parameters);
 		}
 		// 格式化并且加入参数，实现预编译sql（？替换）和sql的参数
-		Object parameter = list.get(0);
+		Object parameter = args.get(0);
 		Class clazz = parameter.getClass();
 		if (clazz.equals(SimpleNumber.class)) {
 			SimpleNumber number = (SimpleNumber) parameter;
@@ -48,16 +84,15 @@ public class PrecomplieMethod implements TemplateMethodModelEx {
 		} else {
 			throw new TemplateModelException("parameter require String|Integer|Long|Float|Double|Date|java.sql.Date");
 		}
-		// 返回替换符？
-		return "?";
 	}
 
 	/**
-	 * 返回线程绑定的list
+	 * 返回线程绑定的list(包括class)
 	 *
 	 * @return
 	 */
-	public List<Pair<Class, Object>> getParameters() {
+	public List<Pair<Class, Object>> getClassesAndParameters() {
 		return threadLocal.get();
 	}
+
 }

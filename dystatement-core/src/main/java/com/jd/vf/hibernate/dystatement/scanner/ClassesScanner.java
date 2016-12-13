@@ -8,12 +8,18 @@ import lombok.SneakyThrows;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.lang.reflect.Field;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by hongfei.whf on 2016/11/24.
  */
 @Data
+@Deprecated
 public class ClassesScanner {
 
 	private Map<Class<?>, Set<Field>> classPropertiesMapper = new HashMap<>();

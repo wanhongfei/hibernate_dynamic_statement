@@ -23,10 +23,11 @@ public class MapperReader {
 
 	public static final String MAPPER_FILE_SUFFIX = ".mapper.xml";
 	private Map<String /*namespace*/, Mapper> mappers = new HashMap<>();
-	private Dom4jXmlExtractor extractor = new Dom4jXmlExtractor();
+	private Dom4jXmlExtractor extractor = null;
 
 	@SneakyThrows
-	public MapperReader(List<String> mapperDirectory) {
+	public MapperReader(List<String> mapperDirectory, Dom4jXmlExtractor extractor) {
+		this.extractor = extractor;
 		for (String path : mapperDirectory) {
 			if (StringUtil.isEmpty(path)) throw new Exception("mapperDirectory has null!");
 			if (path.startsWith("classpath:")) {

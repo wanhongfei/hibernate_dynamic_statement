@@ -1,5 +1,6 @@
 package com.jd.vf.hibernate.dystatement.statement.impl;
 
+import com.jd.vf.hibernate.dystatement.entity.MapperMethod;
 import com.jd.vf.hibernate.dystatement.model.Pair;
 import com.jd.vf.hibernate.dystatement.statement.ExecutableStatement;
 import com.jd.vf.hibernate.dystatement.util.DateUtil;
@@ -14,8 +15,8 @@ import java.util.List;
  */
 public class ExecutableHqlStatement extends ExecutableStatement<Query, Session> {
 
-	public ExecutableHqlStatement(String statement, List<Pair<Class, Object>> parameters) {
-		super(statement, parameters);
+	public ExecutableHqlStatement(String statement, List<Pair<Class, Object>> parameters, MapperMethod.ExecuteTypeEnum executeType, MapperMethod.StatementTypeEnum statementType) {
+		super(statement, parameters, executeType, statementType);
 	}
 
 	/**
@@ -31,7 +32,7 @@ public class ExecutableHqlStatement extends ExecutableStatement<Query, Session> 
 		Query query = session.createQuery(this.statement);
 		for (int i = 0, len = this.parameters.size(); i < len; i++) {
 			Pair<Class, Object> parameter = this.parameters.get(i);
-			setParameter(query, i + 1, parameter.getValue1(), parameter.getValue2());
+			setParameter(query, i, parameter.getValue1(), parameter.getValue2());
 		}
 		return query;
 	}
@@ -47,9 +48,9 @@ public class ExecutableHqlStatement extends ExecutableStatement<Query, Session> 
 		} else if (clazz.equals(Double.class)) {
 			query.setDouble(pos, (Double) parameter);
 		} else if (clazz.equals(Date.class)) {
-			query.setDate(pos, DateUtil.date2sqlDate((Date) parameter));
+			query.setDate(pos, (Date) parameter);
 		} else if (clazz.equals(java.sql.Date.class)) {
-			query.setDate(pos, (java.sql.Date) parameter);
+			query.setDate(pos, DateUtil.sqlDate2Date((java.sql.Date) parameter));
 		} else if (clazz.equals(String.class)) {
 			query.setString(pos, (String) parameter);
 		} else {

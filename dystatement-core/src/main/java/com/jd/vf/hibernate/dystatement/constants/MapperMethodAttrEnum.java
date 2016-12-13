@@ -9,8 +9,6 @@ public enum MapperMethodAttrEnum {
 
 	Namespace("namespace"),
 	Id("id"),
-	Parameter("parameter"),
-	Return("return"),
 	Type("type");
 
 	@Getter

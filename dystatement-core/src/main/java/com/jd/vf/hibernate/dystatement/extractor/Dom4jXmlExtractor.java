@@ -7,7 +7,9 @@ import com.jd.vf.hibernate.dystatement.entity.Mapper;
 import com.jd.vf.hibernate.dystatement.entity.MapperMethod;
 import com.jd.vf.hibernate.dystatement.entity.impl.DMLMapperMethod;
 import com.jd.vf.hibernate.dystatement.entity.impl.SelectMapperMethod;
-import com.jd.vf.hibernate.dystatement.render.method.PrecomplieMethod;
+import com.jd.vf.hibernate.dystatement.render.method.PreComplieMethod;
+import com.jd.vf.hibernate.dystatement.util.StringUtil;
+import lombok.Setter;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.dom4j.Document;
@@ -27,6 +29,12 @@ public class Dom4jXmlExtractor {
 	private final static SAXReader reader = new SAXReader();
 
 	/**
+	 * 默认处理hql预编译的类
+	 */
+	@Setter
+	private Class PreCompileHqlMethodClass = PreComplieMethod.class;
+
+	/**
 	 * 解析xml文件
 	 *
 	 * @param file
@@ -44,26 +52,12 @@ public class Dom4jXmlExtractor {
 			Iterator iter = root.elementIterator();
 			while (iter.hasNext()) {
 				Element currElement = (Element) iter.next();
-				if (MapperMethodTypeEnum.Select.getName().equals(currElement.getName())) {
-					handleSelect(mapper, currElement);
-				} else if (MapperMethodTypeEnum.Insert.getName().equals(currElement.getName())
+				String elementName = currElement.getName().toLowerCase();
+				if (MapperMethodTypeEnum.Select.getName().equals(elementName)
+						|| MapperMethodTypeEnum.Insert.getName().equals(currElement.getName())
 						|| MapperMethodTypeEnum.Update.getName().equals(currElement.getName())
 						|| MapperMethodTypeEnum.Delete.getName().equals(currElement.getName())) {
-					MapperMethodTypeEnum typeEnum = null;
-					switch (currElement.getName().toLowerCase()) {
-						case "insert":
-							typeEnum = MapperMethodTypeEnum.Insert;
-							break;
-						case "update":
-							typeEnum = MapperMethodTypeEnum.Update;
-							break;
-						case "delete":
-							typeEnum = MapperMethodTypeEnum.Delete;
-							break;
-						default:
-							throw new Exception(currElement.getName().toLowerCase() + " can't be resolve");
-					}
-					handleDML(mapper, currElement, typeEnum);
+					handleMapperMethod(mapper, currElement);
 				}
 			}
 			return mapper;
@@ -73,65 +67,85 @@ public class Dom4jXmlExtractor {
 	}
 
 	/**
-	 * 处理是insert、update、delete之类的定义
+	 * 生成MapperMethod
 	 *
 	 * @param mapper
-	 * @param currElement
-	 * @throws ClassNotFoundException
+	 * @param element
 	 */
-
-	private void handleDML(Mapper mapper, Element currElement, MapperMethodTypeEnum typeEnum) throws ClassNotFoundException {
-		DMLMapperMethod method = new DMLMapperMethod();
-		method.setId(currElement.attributeValue(
-				MapperMethodAttrEnum.Id.getName()));
-		method.setExecuteType(currElement.attributeValue(
-				MapperMethodAttrEnum.Type.getName().toLowerCase()));
-//        method.setParameterClazz(
-//                Class.forName(
-//                        currElement.attributeValue(
-//                                MapperMethodAttrEnum.Parameter.getName())));
-		method.setType(typeEnum);
-		method.setDynamicTemplate(currElement.getTextTrim());
+	@SneakyThrows
+	private void handleMapperMethod(Mapper mapper, Element element) {
+		MapperMethod method = handleExecuteType(element);
+		handleStatementType(method, element);
+		method.setId(element.attributeValue(MapperMethodAttrEnum.Id.getName()));
+		method.setDynamicTemplate(element.getTextTrim());
 		handlePrecompile(method);
 		mapper.addMapperMethod(method);
 	}
 
 	/**
-	 * 处理查询语句的定义
+	 * 执行类型
 	 *
-	 * @param mapper
-	 * @param currElement
+	 * @param element
+	 * @return
 	 * @throws ClassNotFoundException
 	 */
-	private void handleSelect(Mapper mapper, Element currElement) throws ClassNotFoundException {
-		SelectMapperMethod method = new SelectMapperMethod();
-		method.setId(currElement.attributeValue(
-				MapperMethodAttrEnum.Id.getName()));
-		method.setExecuteType(currElement.attributeValue(
-				MapperMethodAttrEnum.Type.getName().toLowerCase()));
-//        method.setParameterClazz(
-//                Class.forName(
-//                        currElement.attributeValue(
-//                                MapperMethodAttrEnum.Parameter.getName())));
-		method.setReturnClazz(
-				Class.forName(
-						currElement.attributeValue(
-								MapperMethodAttrEnum.Return.getName())));
-		method.setType(MapperMethodTypeEnum.Select);
-		method.setDynamicTemplate(currElement.getTextTrim());
-		handlePrecompile(method);
-		mapper.addMapperMethod(method);
+	@SneakyThrows
+	private MapperMethod handleExecuteType(Element element) {
+		String elementName = element.getName().toLowerCase();
+		if ("insert".equals(elementName) || "update".equals(elementName) || "delete".equals(elementName)) {
+			DMLMapperMethod method = new DMLMapperMethod();
+			switch (elementName) {
+				case "insert":
+					method.setExecuteType(MapperMethod.ExecuteTypeEnum.Insert);
+					break;
+				case "update":
+					method.setExecuteType(MapperMethod.ExecuteTypeEnum.Update);
+					break;
+				case "delete":
+					method.setExecuteType(MapperMethod.ExecuteTypeEnum.Delete);
+					break;
+			}
+			return method;
+		} else if ("select".equals(elementName)) {
+			SelectMapperMethod method = new SelectMapperMethod();
+			method.setExecuteType(MapperMethod.ExecuteTypeEnum.Select);
+			return method;
+		} else {
+			throw new Exception("mapper has error!!! select|insert|update|delete");
+		}
 	}
 
 	/**
-	 * 处理sql类型预编译问题
+	 * 处理语句类型：是sql还是hql
+	 *
+	 * @param method
+	 * @param element
+	 */
+	@SneakyThrows
+	private void handleStatementType(MapperMethod method, Element element) {
+		String statementName = element.attributeValue(MapperMethodAttrEnum.Type.getName()).toLowerCase();
+		if (StringUtil.isEmpty(statementName) || "sql".equals(statementName)) {
+			method.setStatementType(MapperMethod.StatementTypeEnum.SQL);
+		} else if ("hql".equals(statementName)) {
+			method.setStatementType(MapperMethod.StatementTypeEnum.HQL);
+		} else {
+			throw new Exception("type only support sql and hql");
+		}
+	}
+
+	/**
+	 * 处理sql和hql类型预编译问题
 	 *
 	 * @param method
 	 */
 	private void handlePrecompile(MapperMethod method) {
 //		 使用jdbc进行预编译，加入动态预编译函数声明
-//            "yyyy-MM-dd HH:mm:ss","#.00"
-		String assign = "<#assign precomplie=\"" + PrecomplieMethod.class.getCanonicalName() + "\"?new()/>";
+		String assign = null;
+		if (MapperMethod.StatementTypeEnum.SQL.equals(method.getStatementType())) {
+			assign = "<#assign precomplie=\"" + PreComplieMethod.class.getCanonicalName() + "\"?new()/>";
+		} else {
+			assign = "<#assign precomplie=\"" + PreCompileHqlMethodClass.getCanonicalName() + "\"?new()/>";
+		}
 		String template = method.getDynamicTemplate();
 		String precompileTemplate = assign + template.replace("${", "${precomplie(").replace("}", ")}");
 		log.debug(precompileTemplate);

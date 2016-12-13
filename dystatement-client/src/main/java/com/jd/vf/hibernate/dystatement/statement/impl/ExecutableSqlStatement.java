@@ -1,6 +1,7 @@
 package com.jd.vf.hibernate.dystatement.statement.impl;
 
 
+import com.jd.vf.hibernate.dystatement.entity.MapperMethod;
 import com.jd.vf.hibernate.dystatement.model.Pair;
 import com.jd.vf.hibernate.dystatement.statement.ExecutableStatement;
 import com.jd.vf.hibernate.dystatement.util.DateUtil;
@@ -15,8 +16,8 @@ import java.util.List;
  */
 public class ExecutableSqlStatement extends ExecutableStatement<PreparedStatement, Connection> {
 
-	public ExecutableSqlStatement(String statement, List<Pair<Class, Object>> parameters) {
-		super(statement, parameters);
+	public ExecutableSqlStatement(String statement, List<Pair<Class, Object>> parameters, MapperMethod.ExecuteTypeEnum executeType, MapperMethod.StatementTypeEnum statementType) {
+		super(statement, parameters, executeType, statementType);
 	}
 
 	/**

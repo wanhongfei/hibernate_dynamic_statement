@@ -2,15 +2,17 @@ package com.jd.vf.hibernate.dystatement.template.impl;
 
 import com.jd.vf.hibernate.dystatement.entity.Mapper;
 import com.jd.vf.hibernate.dystatement.entity.MapperMethod;
+import com.jd.vf.hibernate.dystatement.extractor.Dom4jXmlExtractor;
 import com.jd.vf.hibernate.dystatement.model.PairExt;
 import com.jd.vf.hibernate.dystatement.reader.MapperReader;
 import com.jd.vf.hibernate.dystatement.render.Render;
 import com.jd.vf.hibernate.dystatement.render.impl.FreemarkerRender;
-import com.jd.vf.hibernate.dystatement.render.method.PrecomplieMethod;
+import com.jd.vf.hibernate.dystatement.render.method.PreComplieMethod;
 import com.jd.vf.hibernate.dystatement.statement.ExecutableStatement;
 import com.jd.vf.hibernate.dystatement.statement.impl.ExecutableHqlStatement;
 import com.jd.vf.hibernate.dystatement.statement.impl.ExecutableSqlStatement;
 import com.jd.vf.hibernate.dystatement.template.Template;
+import com.jd.vf.hibernate.dystatement.util.StringUtil;
 import freemarker.template.TemplateException;
 import lombok.Data;
 import lombok.SneakyThrows;
@@ -28,18 +30,30 @@ public class DynamicStatementTemplate implements Template {
 
 	private final static String classpath = DynamicStatementTemplate.class.getResource("").getPath();
 	private List<String> MapperScanDirectory = null;
-	private List<String> ClassScanDirectory = null;
+	private String PreCompileHqlMethodClass = null;
 
 	private MapperReader reader = null;
 	private Render resolver = null;
-	private PrecomplieMethod precomplieMethod = null;
+	private Dom4jXmlExtractor extractor = null;
+	private PreComplieMethod preComplieMethod = null;
 
 	@SneakyThrows
 	@Override
 	public void init() {
 		log.debug("init start..");
-		reader = new MapperReader(MapperScanDirectory);
-		precomplieMethod = new PrecomplieMethod();
+		extractor = new Dom4jXmlExtractor();
+		if (!StringUtil.isEmpty(PreCompileHqlMethodClass)) {
+			Class clazz = Class.forName(PreCompileHqlMethodClass);
+			if (clazz == null) {
+				throw new Exception(PreCompileHqlMethodClass + " is not exist");
+			}
+			extractor.setPreCompileHqlMethodClass(clazz);
+		}
+		if (MapperScanDirectory == null || MapperScanDirectory.size() == 0) {
+			throw new Exception("MapperScanDirectory is empty");
+		}
+		reader = new MapperReader(MapperScanDirectory, extractor);
+		preComplieMethod = new PreComplieMethod();
 		resolver = new FreemarkerRender();
 		log.debug("init end..");
 	}
@@ -49,9 +63,15 @@ public class DynamicStatementTemplate implements Template {
 		PairExt<Mapper, MapperMethod, String> res = proccess(namespace, methodId, params);
 		MapperMethod method = res.getValue2();
 		if ("sql".equals(method.getExecuteType())) {
-			return new ExecutableSqlStatement(res.getValue3(), precomplieMethod.getParameters());
+			return new ExecutableSqlStatement(res.getValue3(),
+					preComplieMethod.getClassesAndParameters(),
+					method.getExecuteType(),
+					method.getStatementType());
 		} else {
-			return new ExecutableHqlStatement(res.getValue3(), precomplieMethod.getParameters());
+			return new ExecutableHqlStatement(res.getValue3(),
+					preComplieMethod.getClassesAndParameters(),
+					method.getExecuteType(),
+					method.getStatementType());
 		}
 	}
 
