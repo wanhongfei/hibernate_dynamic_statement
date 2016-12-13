@@ -1,7 +1,6 @@
 <mapper namespace="test.namespace">
 
-    <select id="test_method" return="com.jd.vf.hibernate.dystatement.test.entity.Student"
-            type="sql">
+    <select id="test_method" type="sql">
         <![CDATA[
             select * from student
             where 1=1
@@ -29,10 +28,9 @@
         ]]>
     </insert>
 
-    <select id="test_method2" return="com.jd.vf.hibernate.dystatement.test.entity.Student"
-            type="hql">
+    <select id="test_method2" type="hql">
         <![CDATA[
-            select count(*) from student stu
+            from com.jd.vf.hibernate.dystatement.test.entity.Student stu
             where 1=1
             <#if name??>
                 and stu.name = ${name}
