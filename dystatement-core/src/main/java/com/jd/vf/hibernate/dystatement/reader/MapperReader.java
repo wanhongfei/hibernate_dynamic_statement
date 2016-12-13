@@ -2,6 +2,7 @@ package com.jd.vf.hibernate.dystatement.reader;
 
 import com.jd.vf.hibernate.dystatement.entity.Mapper;
 import com.jd.vf.hibernate.dystatement.extractor.Dom4jXmlExtractor;
+import com.jd.vf.hibernate.dystatement.util.FileUtil;
 import com.jd.vf.hibernate.dystatement.util.StringUtil;
 import lombok.Data;
 import lombok.NonNull;
@@ -32,9 +33,13 @@ public class MapperReader {
 			if (StringUtil.isEmpty(path)) throw new Exception("mapperDirectory has null!");
 			if (path.startsWith("classpath:")) {
 				path = path.replace("classpath:", "");
-				path = MapperReader.class.getResource(path).getPath();
+				File file = FileUtil.classpathFile(path);
+				if (file.exists()) {
+					scan(file.getAbsolutePath());
+				}
+			} else {
+				scan(path);
 			}
-			scan(path);
 		}
 	}
 

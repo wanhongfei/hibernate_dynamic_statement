@@ -27,7 +27,7 @@ public class TemplateTest {
 	public void before() throws DocumentException, IOException, ClassNotFoundException {
 		template = new DynamicStatementTemplate();
 		List<String> paths = new ArrayList<>();
-		paths.add("C:\\Users\\wanhongfei\\Desktop\\project\\hibernate_dynamic_statement\\dystatement-client\\src\\test\\java\\com\\jd\\vf\\hibernate\\dystatement\\test\\mapper");
+		paths.add("classpath:com.jd.vf.hibernate.dystatement.test.mapper");
 		template.setMapperScanDirectory(paths);
 		template.setPreCompileHqlMethodClass("com.jd.vf.hibernate.dystatement.render.method.PreComplieHqlMethod");
 //		List<String> packages = new ArrayList<>();

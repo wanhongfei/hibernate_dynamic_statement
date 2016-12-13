@@ -16,7 +16,6 @@ import com.jd.vf.hibernate.dystatement.util.StringUtil;
 import freemarker.template.TemplateException;
 import lombok.Data;
 import lombok.SneakyThrows;
-import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.util.List;
@@ -25,7 +24,6 @@ import java.util.List;
  * Created by wanhongfei on 2016/11/24.
  */
 @Data
-@Slf4j
 public class DynamicStatementTemplate implements Template {
 
 	private final static String classpath = DynamicStatementTemplate.class.getResource("").getPath();
@@ -40,7 +38,6 @@ public class DynamicStatementTemplate implements Template {
 	@SneakyThrows
 	@Override
 	public void init() {
-		log.debug("init start..");
 		extractor = new Dom4jXmlExtractor();
 		if (!StringUtil.isEmpty(PreCompileHqlMethodClass)) {
 			Class clazz = Class.forName(PreCompileHqlMethodClass);
@@ -55,7 +52,6 @@ public class DynamicStatementTemplate implements Template {
 		reader = new MapperReader(MapperScanDirectory, extractor);
 		preComplieMethod = new PreComplieMethod();
 		resolver = new FreemarkerRender();
-		log.debug("init end..");
 	}
 
 	@Override
