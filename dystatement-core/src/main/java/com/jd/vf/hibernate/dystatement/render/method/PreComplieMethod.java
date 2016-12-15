@@ -1,11 +1,7 @@
 package com.jd.vf.hibernate.dystatement.render.method;
 
 import com.jd.vf.hibernate.dystatement.model.Pair;
-import freemarker.template.SimpleDate;
-import freemarker.template.SimpleNumber;
-import freemarker.template.SimpleScalar;
-import freemarker.template.TemplateMethodModelEx;
-import freemarker.template.TemplateModelException;
+import freemarker.template.*;
 import lombok.SneakyThrows;
 
 import java.util.ArrayList;
@@ -93,6 +89,13 @@ public class PreComplieMethod implements TemplateMethodModelEx {
 	 */
 	public List<Pair<Class, Object>> getClassesAndParameters() {
 		return threadLocal.get();
+	}
+
+	/**
+	 * 如果同一个线程使用拼装
+	 */
+	public void initParameters() {
+		threadLocal.set(null);
 	}
 
 }

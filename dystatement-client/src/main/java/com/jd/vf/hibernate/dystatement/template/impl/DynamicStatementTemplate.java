@@ -56,6 +56,7 @@ public class DynamicStatementTemplate implements Template {
 
 	@Override
 	public ExecutableStatement assembled(String namespace, String methodId, Object params) {
+		preComplieMethod.initParameters();
 		PairExt<Mapper, MapperMethod, String> res = proccess(namespace, methodId, params);
 		MapperMethod method = res.getValue2();
 		if ("sql".equals(method.getExecuteType())) {
