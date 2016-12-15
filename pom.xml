@@ -12,6 +12,7 @@
         <module>dystatement-common</module>
         <module>dystatement-client</module>
         <module>dystatement-core</module>
+        <module>dystatement-factory</module>
     </modules>
 
     <properties>
@@ -115,6 +116,11 @@
             <dependency>
                 <groupId>com.jd</groupId>
                 <artifactId>vf.hibernate.dystatement.core</artifactId>
+                <version>1.0.0</version>
+            </dependency>
+            <dependency>
+                <groupId>com.jd</groupId>
+                <artifactId>vf.hibernate.dystatement.factory</artifactId>
                 <version>1.0.0</version>
             </dependency>
         </dependencies>

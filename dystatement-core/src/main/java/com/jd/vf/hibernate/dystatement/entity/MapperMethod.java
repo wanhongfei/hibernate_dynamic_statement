@@ -1,5 +1,6 @@
 package com.jd.vf.hibernate.dystatement.entity;
 
+import com.jd.vf.hibernate.dystatement.render.method.PreComplieMethod;
 import lombok.Data;
 import lombok.Getter;
 
@@ -29,6 +30,23 @@ public class MapperMethod {
 	 * 默认sql
 	 */
 	protected StatementTypeEnum statementType = StatementTypeEnum.SQL;
+
+	/**
+	 * 处理sql和hql类型预编译问题
+	 *
+	 * @param PreCompileHqlMethodClass
+	 */
+	public void precompile(Class PreCompileHqlMethodClass) {
+		String assign = null;
+		if (MapperMethod.StatementTypeEnum.SQL.equals(getStatementType())) {
+			assign = "<#assign precomplie=\"" + PreComplieMethod.class.getCanonicalName() + "\"?new()/>";
+		} else {
+			assign = "<#assign precomplie=\"" + PreCompileHqlMethodClass.getCanonicalName() + "\"?new()/>";
+		}
+		String template = getDynamicTemplate();
+		String precompileTemplate = assign + template.replace("${", "${precomplie(").replace("}", ")}");
+		setDynamicTemplate(precompileTemplate);
+	}
 
 	/**
 	 * 语句类型，sql或者hql

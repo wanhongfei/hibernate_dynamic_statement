@@ -7,6 +7,7 @@ import lombok.Data;
  * Created by hongfei.whf on 2016/12/4.
  */
 @Data
+@Deprecated
 public class SelectMapperMethod extends MapperMethod {
 
 	/**

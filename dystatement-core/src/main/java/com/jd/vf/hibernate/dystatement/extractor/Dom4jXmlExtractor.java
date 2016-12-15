@@ -5,8 +5,6 @@ import com.jd.vf.hibernate.dystatement.constants.MapperMethodAttrEnum;
 import com.jd.vf.hibernate.dystatement.constants.MapperMethodTypeEnum;
 import com.jd.vf.hibernate.dystatement.entity.Mapper;
 import com.jd.vf.hibernate.dystatement.entity.MapperMethod;
-import com.jd.vf.hibernate.dystatement.entity.impl.DMLMapperMethod;
-import com.jd.vf.hibernate.dystatement.entity.impl.SelectMapperMethod;
 import com.jd.vf.hibernate.dystatement.render.method.PreComplieMethod;
 import com.jd.vf.hibernate.dystatement.util.StringUtil;
 import lombok.Setter;
@@ -92,8 +90,9 @@ public class Dom4jXmlExtractor {
 	@SneakyThrows
 	private MapperMethod handleExecuteType(Element element) {
 		String elementName = element.getName().toLowerCase();
-		if ("insert".equals(elementName) || "update".equals(elementName) || "delete".equals(elementName)) {
-			DMLMapperMethod method = new DMLMapperMethod();
+		if ("insert".equals(elementName) || "update".equals(elementName)
+				|| "delete".equals(elementName)) {
+			MapperMethod method = new MapperMethod();
 			switch (elementName) {
 				case "insert":
 					method.setExecuteType(MapperMethod.ExecuteTypeEnum.Insert);
@@ -107,7 +106,7 @@ public class Dom4jXmlExtractor {
 			}
 			return method;
 		} else if ("select".equals(elementName)) {
-			SelectMapperMethod method = new SelectMapperMethod();
+			MapperMethod method = new MapperMethod();
 			method.setExecuteType(MapperMethod.ExecuteTypeEnum.Select);
 			return method;
 		} else {
@@ -139,16 +138,6 @@ public class Dom4jXmlExtractor {
 	 * @param method
 	 */
 	private void handlePrecompile(MapperMethod method) {
-//		 使用jdbc进行预编译，加入动态预编译函数声明
-		String assign = null;
-		if (MapperMethod.StatementTypeEnum.SQL.equals(method.getStatementType())) {
-			assign = "<#assign precomplie=\"" + PreComplieMethod.class.getCanonicalName() + "\"?new()/>";
-		} else {
-			assign = "<#assign precomplie=\"" + PreCompileHqlMethodClass.getCanonicalName() + "\"?new()/>";
-		}
-		String template = method.getDynamicTemplate();
-		String precompileTemplate = assign + template.replace("${", "${precomplie(").replace("}", ")}");
-		log.debug(precompileTemplate);
-		method.setDynamicTemplate(precompileTemplate);
+		method.precompile(PreCompileHqlMethodClass);
 	}
 }
