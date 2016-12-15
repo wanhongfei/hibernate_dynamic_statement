@@ -1,4 +1,4 @@
-package com.jd.vf.hibernate.dystatemenet.node;
+package com.jd.vf.hibernate.dystatement.node;
 
 import com.jd.vf.hibernate.dystatement.entity.MapperMethod;
 import lombok.NoArgsConstructor;

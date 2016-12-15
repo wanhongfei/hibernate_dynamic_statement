@@ -1,6 +1,6 @@
 package com.jd.vf.hibernate.dystatement.factory;
 
-import com.jd.vf.hibernate.dystatemenet.node.DyStatementNode;
+import com.jd.vf.hibernate.dystatement.node.DyStatementNode;
 import com.jd.vf.hibernate.dystatement.entity.MapperMethod;
 import lombok.NonNull;
 

@@ -1,6 +1,6 @@
-package com.jd.vf.hibernate.dystatemenet.node.impl;
+package com.jd.vf.hibernate.dystatement.node.impl;
 
-import com.jd.vf.hibernate.dystatemenet.node.DyStatementNode;
+import com.jd.vf.hibernate.dystatement.node.DyStatementNode;
 import lombok.Data;
 
 /**
