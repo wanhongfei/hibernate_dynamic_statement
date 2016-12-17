@@ -74,11 +74,13 @@ public class PreComplieMethod implements TemplateMethodModelEx {
 					date.getAsDate().getClass(),
 					date.getAsDate()));
 		} else if (clazz.equals(SimpleScalar.class)) {
+			// Stirng
 			SimpleScalar scalar = (SimpleScalar) parameter;
 			parameters.add(new Pair<Class, Object>(
 					scalar.getAsString().getClass(),
 					scalar.getAsString()));
 		} else if (parameter instanceof TemplateBooleanModel) {
+			// boolean
 			TemplateBooleanModel templateBooleanModel = (TemplateBooleanModel) parameter;
 			parameters.add(new Pair<Class, Object>(
 					Boolean.class, templateBooleanModel.getAsBoolean()));
