@@ -13,6 +13,15 @@ import java.util.*;
 public class CollectionUtil {
 
 	/**
+	 * 特殊集合
+	 *
+	 * @return
+	 */
+	public static Map emptyMap = Collections.EMPTY_MAP;
+	public static Set emptySet = Collections.EMPTY_SET;
+	public static List emptyList = Collections.EMPTY_LIST;
+
+	/**
 	 * @param ids
 	 * @param symbol
 	 * @return
@@ -139,5 +148,16 @@ public class CollectionUtil {
 	 */
 	public static <T> List<T> array2List(@NonNull T[] array) {
 		return Arrays.asList(array);
+	}
+
+	/**
+	 * 可变数组转为list
+	 *
+	 * @param objs
+	 * @param <T>
+	 * @return
+	 */
+	public static <T> List<T> objects2List(@NonNull Class<T> clazz, @NonNull T... objs) {
+		return array2List(objs);
 	}
 }

@@ -10,6 +10,13 @@ import java.util.Collection;
 public class StringUtil {
 
 	/**
+	 * 特殊集合
+	 *
+	 * @return
+	 */
+	public static String emptyString = "";
+
+	/**
 	 * 字符串是否为空
 	 *
 	 * @param str
@@ -96,6 +103,30 @@ public class StringUtil {
 			return false;
 		} else {
 			return a.contains(b);
+		}
+	}
+
+	/**
+	 * 字符串撰文其他基本类型
+	 *
+	 * @param value
+	 * @param clazz
+	 * @param <T>
+	 * @return
+	 */
+	public static <T> T string2BaseType(@NonNull String value, @NonNull Class<T> clazz) {
+		if (clazz.equals(Integer.class)) {
+			return (T) Integer.valueOf(value);
+		} else if (clazz.equals(Long.class)) {
+			return (T) Long.valueOf(value);
+		} else if (clazz.equals(Float.class)) {
+			return (T) Float.valueOf(value);
+		} else if (clazz.equals(Double.class)) {
+			return (T) Double.valueOf(value);
+		} else if (clazz.equals(Boolean.class)) {
+			return (T) Boolean.valueOf(value);
+		} else {
+			return (T) value;
 		}
 	}
 
