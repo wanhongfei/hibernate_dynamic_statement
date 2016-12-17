@@ -43,7 +43,7 @@ public class TemplateTest {
 		Student student2 = new Student(2, "3", 4);
 		map.put("age", 11.1);
 		map.put("start", 0);
-		map.put("offset", 20);
+		map.put("offset", true);
 		map.put("name", new Date());
 		map.put("studentClassName", Student.class.getCanonicalName());
 		map.put("list", Arrays.asList(new Student[]{student1, student2}));

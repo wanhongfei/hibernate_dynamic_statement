@@ -53,8 +53,10 @@ public class ExecutableSqlStatement extends ExecutableStatement<PreparedStatemen
 			ps.setDate(pos, (java.sql.Date) parameter);
 		} else if (clazz.equals(String.class)) {
 			ps.setString(pos, (String) parameter);
+		} else if (clazz.equals(Boolean.class)) {
+			ps.setBoolean(pos, (Boolean) parameter);
 		} else {
-			throw new Exception("only support int|long|float|double|date|string");
+			throw new Exception("only support int|long|float|double|date|string|boolean");
 		}
 	}
 

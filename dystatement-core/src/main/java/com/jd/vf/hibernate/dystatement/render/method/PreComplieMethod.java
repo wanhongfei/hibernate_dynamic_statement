@@ -59,6 +59,7 @@ public class PreComplieMethod implements TemplateMethodModelEx {
 		// 格式化并且加入参数，实现预编译sql（？替换）和sql的参数
 		Object parameter = args.get(0);
 		Class clazz = parameter.getClass();
+		System.out.println(clazz);
 		if (clazz.equals(SimpleNumber.class)) {
 			SimpleNumber number = (SimpleNumber) parameter;
 			Class baseValueType = number.getAsNumber().getClass();
@@ -77,8 +78,13 @@ public class PreComplieMethod implements TemplateMethodModelEx {
 			parameters.add(new Pair<Class, Object>(
 					scalar.getAsString().getClass(),
 					scalar.getAsString()));
+		} else if (parameter instanceof TemplateBooleanModel) {
+			TemplateBooleanModel templateBooleanModel = (TemplateBooleanModel) parameter;
+			parameters.add(new Pair<Class, Object>(
+					Boolean.class, templateBooleanModel.getAsBoolean()));
+
 		} else {
-			throw new TemplateModelException("parameter require String|Integer|Long|Float|Double|Date|java.sql.Date");
+			throw new TemplateModelException("parameter require String|Integer|Long|Float|Double|Date|java.sql.Date|boolean");
 		}
 	}
 

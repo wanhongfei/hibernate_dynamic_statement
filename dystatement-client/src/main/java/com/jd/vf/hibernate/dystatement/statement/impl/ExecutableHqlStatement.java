@@ -53,8 +53,10 @@ public class ExecutableHqlStatement extends ExecutableStatement<Query, Session> 
 			query.setDate(pos, DateUtil.sqlDate2Date((java.sql.Date) parameter));
 		} else if (clazz.equals(String.class)) {
 			query.setString(pos, (String) parameter);
+		} else if (clazz.equals(Boolean.class)) {
+			query.setBoolean(pos, (Boolean) parameter);
 		} else {
-			throw new Exception("only support int|long|float|double|date|string");
+			throw new Exception("only support int|long|float|double|date|string|boolean");
 		}
 	}
 }
